@@ -108,3 +108,6 @@ hodp-surveys*.json
 
 # Do not upload actual CSVs by accident
 *.csv
+
+# Only .py files, use .ipynb files for testing only
+*.ipynb
