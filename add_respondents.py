@@ -35,6 +35,7 @@ firebase_admin.initialize_app(cred, {
 db = firestore.client()
 
 emails_ref = db.collection(u"emails")
+responses_ref = db.collection(u"responses")
 
 for email in emails:
     email = email.lower()
@@ -44,4 +45,8 @@ for email in emails:
         isEmpty = False
         break
     if isEmpty:
-        emails_ref.add({"email" : email, "last_contact" : datetime.datetime.min})
+        update_time, doc_ref = emails_ref.add({"email" : email, 
+        "last_contact" : datetime.datetime.min,
+        "has_demographics" : False
+        })
+        responses_ref.document(doc_ref.id).set({})
