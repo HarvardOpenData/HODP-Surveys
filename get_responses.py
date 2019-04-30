@@ -2,6 +2,11 @@ import firebase_admin
 from firebase_admin import credentials
 from firebase_admin import firestore
 
+
+# key: list of keys to retrive
+# database object to use
+# TODO: The way of filtering can be improved.
+## Should be using document snapshots instead to avoid downloading all data
 def get_responses(keys, db):
     result = []
     responses_ref = db.collection(u"responses")
