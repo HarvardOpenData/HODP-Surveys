@@ -102,3 +102,9 @@ venv.bak/
 
 # mypy
 .mypy_cache/
+
+# Prevent accidental upload of json keys
+hodp-surveys*.json
+
+# Do not upload actual CSVs by accident
+*.csv
