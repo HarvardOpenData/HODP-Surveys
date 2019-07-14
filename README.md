@@ -15,6 +15,9 @@ Only HODP executive committee members wil have direct access to the database and
 ### Internal Anonymization
 In order to link responses, we use email addresses. However, we also want to make it so that executive committee members cannot accidentally see individual survey responses. So, in our database we do not link individuals via email address, but using a unique hash of their email address so that at first glance any individuals in the database cannot be easily linked to their responses. See below for more specifics of the structure of the surveys database. 
 
+### Google Sign In for Identity Verification
+Because Harvard College email addresses are hosted with Google, we are able to use Google Sign in to verify the identity of respondents who sign in through our website. When a user signs in through Google, our backend server receives a unique token from Google to authenticate that the user is who they say they are. The only information that we access is the email address and unique Google ID (a number that Google provides us). We do not see the respondent's google password nor do we access any profile information beyond the email address. 
+
 ## Database Structure
 HODP uses Google Firebase for storage of survey responses. We have two collections in the database: emails and responses.
 
