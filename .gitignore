@@ -105,6 +105,7 @@ venv.bak/
 
 # Prevent accidental upload of json keys
 hodp-surveys*.json
+*creds.json
 
 # Do not upload actual CSVs by accident
 *.csv
