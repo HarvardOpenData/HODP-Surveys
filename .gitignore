@@ -112,3 +112,5 @@ hodp-surveys*.json
 
 # Only .py files, use .ipynb files for testing only
 *.ipynb
+
+.vscode
