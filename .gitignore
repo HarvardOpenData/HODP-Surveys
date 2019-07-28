@@ -114,3 +114,5 @@ hodp-surveys*.json
 *.ipynb
 
 .vscode
+
+*mapping.json
