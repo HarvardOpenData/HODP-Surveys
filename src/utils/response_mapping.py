@@ -124,7 +124,7 @@ def add_response_entry(entry : ResponseEntry, mapping : EntryMapping, cur_dict :
             next_dict = cur_dict[key]
             add_response_entry(entry, new_mapping, next_dict)
 
-def get_response_entry(path : str, cur_dict : dict):
+def get_response_entry(path : str, cur_dict : dict) -> dict:
     path_arr = path.split("/")
     print(path_arr)
     if len(path_arr) == 1:
@@ -143,5 +143,12 @@ def get_response_entry(path : str, cur_dict : dict):
             return get_response_entry(new_path, new_dict)
         else:
             return None
+
+def get_response_value(path : str, cur_dict : dict):
+    entry = get_response_entry(path, cur_dict)
+    if "value" in entry:
+        return entry["value"]
+    else:
+        return entry
 
 
