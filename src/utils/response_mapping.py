@@ -126,7 +126,6 @@ def add_response_entry(entry : ResponseEntry, mapping : EntryMapping, cur_dict :
 
 def get_response_entry(path : str, cur_dict : dict) -> dict:
     path_arr = path.split("/")
-    print(path_arr)
     if len(path_arr) == 1:
         key = path_arr[0]
         if key in cur_dict:
@@ -138,7 +137,6 @@ def get_response_entry(path : str, cur_dict : dict) -> dict:
         new_path = "/".join(path_arr[1:])
         if key in cur_dict:
             new_dict = cur_dict[key]
-            print(type(new_dict))
             assert type(new_dict) == dict, "invalid path ending with {}".format(path)
             return get_response_entry(new_path, new_dict)
         else:
@@ -146,7 +144,7 @@ def get_response_entry(path : str, cur_dict : dict) -> dict:
 
 def get_response_value(path : str, cur_dict : dict):
     entry = get_response_entry(path, cur_dict)
-    if "value" in entry:
+    if entry is not None and "value" in entry:
         return entry["value"]
     else:
         return entry

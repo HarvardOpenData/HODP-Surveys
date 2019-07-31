@@ -41,8 +41,8 @@ def add_all_responses(mappings_dict : Dict[str, EntryMapping],
     filtered_dicts = {}
     for input_dict in inputs_dict.values():
         email = input_dict["email"]
-        add_to_respondent(email, inputs_dict, respondents_map, mappings_dict)
-        filtered_dicts[email] = filter_unchanged(respondents_map["kevinbi@college.harvard.edu"], mappings_dict)
+        add_to_respondent(email, input_dict, respondents_map, mappings_dict)
+        filtered_dicts[email] = filter_unchanged(respondents_map[email], mappings_dict)
     return filtered_dicts
 
 def get_mappings_dict(mapping_filename : str) -> Dict[str, EntryMapping]: 
@@ -87,8 +87,7 @@ def get_respondents_map(input_dicts : Dict[str, dict], db) -> Dict[str, dict]:
         respondents_map[email] = doc_dict
     return respondents_map
 
-def add_to_respondent(email : str, inputs_dict : Dict[str, dict], respondents_map : Dict[str, dict], mappings_dict : Dict[str, dict]):
-    input_dict = inputs_dict[email]
+def add_to_respondent(email : str, input_dict : Dict[str, dict], respondents_map : Dict[str, dict], mappings_dict : Dict[str, dict]):
     cur_dict = respondents_map[email]
     for mapping_name in mappings_dict:
         if mapping_name in input_dict:
@@ -143,7 +142,7 @@ def commit_update(email : str, update_dict : dict, db,
         total_responses += 1
         email_doc.update({
             "monthly_responses" : monthly_responses,
-            "tota_responses" : total_responses
+            "total_responses" : total_responses
         })
     responses_ref.document(hashed_email).update(update_dict)
 
@@ -152,7 +151,7 @@ def update_template(mappings : Dict[str, dict], db):
     responses_ref = db.collection("responses")
     template_ref = responses_ref.document("template")
     template_dict = template_ref.get().to_dict()
-    for (key, mapping) in mappings:
+    for (key, mapping) in mappings.items():
         entry = ResponseEntry(mapping.description)
         add_response_entry(entry, mapping, template_dict)
     update_dict = filter_unchanged(template_dict, mappings)

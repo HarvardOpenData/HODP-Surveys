@@ -2,19 +2,25 @@ import firebase_admin
 from firebase_admin import credentials
 from firebase_admin import firestore
 
+from utils.response_mapping import *
+from utils import firebasedb, linking
+from typing import List
 
-# key: list of keys to retrive
-# database object to use
-# TODO: The way of filtering can be improved.
-## Should be using document snapshots instead to avoid downloading all data
-def get_responses(keys, db):
-    result = []
-    responses_ref = db.collection(u"responses")
-    docs = responses_ref.stream() 
-    for doc in docs:
+def get_response_values(paths : List[str], db) -> List[dict]: 
+    responses_ref = db.collection("responses")
+    response_docs = responses_ref.stream()
+    responses = []
+    for doc in response_docs:
+        if doc.id == "template":
+            continue
         doc_dict = doc.to_dict()
-        new_dict = { k:v for (k, v) in doc_dict.items() if k in keys }
-        if len(new_dict.keys()) == len(keys):
-            result.append(new_dict)
-    return result
+        out_dict = {}
+        for path in paths:
+            value = get_response_value(path, doc_dict)
+            out_dict[path] = value
+        if not (None in out_dict.values()):
+            responses.append(out_dict)
+    return responses
+
+
 
