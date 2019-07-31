@@ -6,7 +6,7 @@ from utils.response_mapping import *
 from utils import firebasedb, linking
 from typing import List
 
-def get_response_values(paths : List[str], db) -> List[dict]: 
+def get_response_values(paths : List[str], db, optional_paths = []) -> List[dict]: 
     responses_ref = db.collection("responses")
     response_docs = responses_ref.stream()
     responses = []
@@ -15,10 +15,14 @@ def get_response_values(paths : List[str], db) -> List[dict]:
             continue
         doc_dict = doc.to_dict()
         out_dict = {}
+        should_add = True
         for path in paths:
             value = get_response_value(path, doc_dict)
-            out_dict[path] = value
-        if not (None in out_dict.values()):
+            if value is not None:
+                out_dict[path] = value
+            elif path not in optional_paths:
+                should_add = False
+        if should_add:
             responses.append(out_dict)
     return responses
 
