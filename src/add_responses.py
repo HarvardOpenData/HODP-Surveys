@@ -112,9 +112,9 @@ def filter_unchanged(cur_dict : dict, mappings : Dict[str, EntryMapping]) -> dic
 def get_monthly_response_id(date = datetime.now()):
     return "{}_{}".format(date.year, date.month)
 
-def commit_all_updates(updates_dict : Dict[str, dict], db, verbose = False):
+def commit_all_updates(updates_dict : Dict[str, dict], db, increment_response_count = True, verbose = False):
     for (key, value) in updates_dict.items():
-        commit_update(key, value, db)
+        commit_update(key, value, db, increment_response_count)
         if verbose:
             print("updated {}".format(key))
 

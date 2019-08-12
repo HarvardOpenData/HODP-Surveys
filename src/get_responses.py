@@ -54,11 +54,25 @@ def get_emails_with_paths(paths : List[str], db, optional_paths = [], verbose = 
                 print("retrieved {} emails".format(len(out_dict)))
     return respondents_list
 
-def respondents_list_to_csv(respondents_list : List[dict], output_filename : str):
+def respondents_list_to_csv(respondents_list : List[dict], output_filename : str, fieldnames = None):
     with open(output_filename, "w+") as output_file:
-        writer = csv.DictWriter(output_file, fieldnames = respondents_list[0].keys())
+        if fieldnames is None:
+            fieldnames = respondents_list[0].keys()
+        writer = csv.DictWriter(output_file, fieldnames = fieldnames)
         writer.writeheader()
         for respondent_dict in respondents_list:
             writer.writerow(respondent_dict)
-        
 
+def get_all_paths(cur_dict : dict):
+    paths = []
+    for key, value in cur_dict.items():
+        if type(value) is dict and not ("value" in value and "date" in value):
+            sub_paths = get_all_paths(value)
+            paths.extend([key + "/" + sub_path for sub_path in sub_paths])
+        else:
+            paths.append(key)
+    return paths
+        
+def get_all_template_paths(db : firestore.firestore.Client):
+    template_dict = db.collection("responses").document(document_id="template").get().to_dict()
+    return get_all_paths(template_dict)
