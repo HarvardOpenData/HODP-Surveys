@@ -2,6 +2,7 @@ import firebase_admin
 import csv
 from firebase_admin import credentials
 from firebase_admin import firestore
+import json
 
 from utils.response_mapping import *
 from utils import firebasedb, linking
@@ -53,6 +54,11 @@ def get_emails_with_paths(paths : List[str], db, optional_paths = [], verbose = 
             if verbose:
                 print("retrieved {} emails".format(len(out_dict)))
     return respondents_list
+
+
+def respondents_list_to_json(respondents_list : List[dict], output_filename : str, fieldnames = None):
+    with open(output_filename, "w+") as output_file:
+        json.dump(respondents_list, output_file, indent = 4)
 
 def respondents_list_to_csv(respondents_list : List[dict], output_filename : str, fieldnames = None):
     with open(output_filename, "w+") as output_file:
