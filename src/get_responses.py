@@ -3,6 +3,7 @@ import csv
 from firebase_admin import credentials
 from firebase_admin import firestore
 import json
+import random
 
 from utils.response_mapping import *
 from utils import firebasedb, linking
@@ -68,6 +69,30 @@ def respondents_list_to_csv(respondents_list : List[dict], output_filename : str
         writer.writeheader()
         for respondent_dict in respondents_list:
             writer.writerow(respondent_dict)
+
+def conduct_lottery(db : firestore.firestore.Client, count = 1, month = None, 
+                        allow_repeats = False, default_entries = 1) -> List[str]:
+    emails_ref = db.collection("emails")
+    emails_docs = emails_ref.stream()
+    entries : List[str] = []
+
+    for doc in emails_docs:
+        entries.extend([doc.id] * default_entries)
+        if month is not None:
+            doc_dict : dict = doc.to_dict()
+            monthly_responses = doc_dict.get(month, 0)
+            entries.extend([doc.id] * monthly_responses)
+    
+    winners = []
+    
+    for _ in range(count):
+        winner = random.choice(entries)
+        if not allow_repeats:
+            entries = [entry for entry in entries if entry != winner]
+        winners.append(winner)
+
+    return winners
+
 
 def get_all_paths(cur_dict : dict):
     paths = []
