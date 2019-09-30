@@ -7,7 +7,7 @@ import random
 
 from utils.response_mapping import *
 from utils import firebasedb, linking
-from typing import List
+from typing import List, Iterable
 
 def get_response_values(paths : List[str], db, optional_paths = [], verbose = False) -> List[dict]: 
     responses_ref = db.collection("responses")
@@ -71,12 +71,15 @@ def respondents_list_to_csv(respondents_list : List[dict], output_filename : str
             writer.writerow(respondent_dict)
 
 def conduct_lottery(db : firestore.firestore.Client, count = 1, month = None, 
-                        allow_repeats = False, default_entries = 1) -> List[str]:
+                        allow_repeats = False, default_entries = 1, require_demographics = True) -> List[str]:
     emails_ref = db.collection("emails")
-    emails_docs = emails_ref.stream()
+    emails_docs : Iterable[firestore.firestore.DocumentSnapshot]= emails_ref.stream()
     entries : List[str] = []
 
     for doc in emails_docs:
+        doc_dict = doc.to_dict()
+        if require_demographics and not doc_dict.get("has_demographics", False):
+            continue
         entries.extend([doc.id] * default_entries)
         if month is not None:
             doc_dict : dict = doc.to_dict()
