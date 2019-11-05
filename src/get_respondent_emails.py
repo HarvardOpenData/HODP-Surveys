@@ -3,11 +3,12 @@ import csv
 import sys
 
 def main():
-    output_filename = sys.argv[1] if len(sys.argv) > 1 else "active_resondents.csv"
-
+    verbose = "--verbose" in sys.argv
+    print(verbose)
     firebasedb.init_survey_firebase()
     db = firebasedb.get_survey_firestore_client()
-    respondents = get_active_respondents(db)
+    respondents = get_active_respondents(db, verbose = verbose)
+
 
     with open("active_respondents.csv", "w+") as output_file:
         fieldnames = ["email", "year"]
@@ -17,7 +18,7 @@ def main():
             writer.writerow(respondent)
         
 
-def get_active_respondents(db): 
+def get_active_respondents(db, verbose = False): 
     emails_ref = db.collection("emails")
     responses_ref = db.collection("responses")
 
@@ -35,6 +36,8 @@ def get_active_respondents(db):
             "year" : year
         }
         respondents.append(respondent)
+        if verbose:
+            print("Retrieved ", doc_id)
     return respondents
 
 
