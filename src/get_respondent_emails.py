@@ -4,7 +4,6 @@ import sys
 
 def main():
     verbose = "--verbose" in sys.argv
-    print(verbose)
     firebasedb.init_survey_firebase()
     db = firebasedb.get_survey_firestore_client()
     respondents = get_active_respondents(db, verbose = verbose)
