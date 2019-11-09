@@ -29,6 +29,7 @@ def get_response_values(paths : List[str], db, optional_paths = [], verbose = Fa
             responses.append(out_dict)
             if verbose:
                 print("retrieved {} responses".format(len(responses)))
+    random.shuffle(responses)
     return responses
 
 def get_emails_with_paths(paths : List[str], db, optional_paths = [], verbose = True) -> List[dict]:
