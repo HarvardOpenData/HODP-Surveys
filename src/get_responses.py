@@ -84,7 +84,7 @@ def conduct_lottery(db : firestore.firestore.Client, count = 1, month = None,
         entries.extend([doc.id] * default_entries)
         if month is not None:
             doc_dict : dict = doc.to_dict()
-            monthly_responses = doc_dict.get(month, 0)
+            monthly_responses = doc_dict.get("total_responses", 0)
             entries.extend([doc.id] * monthly_responses)
     
     winners = []
