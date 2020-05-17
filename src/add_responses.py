@@ -28,6 +28,8 @@ def main():
     with open("updates.json", "w+") as updates_file:
         json.dump(updates_dict, updates_file)
     
+    print("The update json has been placed in updates.json. Please check this to validate that the update is correct")
+
     user_confirmation = ""
     while user_confirmation != "confirm":
         user_confirmation = input("Type 'confirm' to finalize updates")
