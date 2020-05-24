@@ -10,6 +10,19 @@ from utils import firebasedb, linking
 from typing import List, Iterable
 
 def get_response_values(paths : List[str], db, optional_paths = [], verbose = False) -> List[dict]: 
+    """Retrieves responses for specified paths
+
+    Parameters
+    ----------
+    paths : List[str]
+        This is the list of required paths where we want the data. A document is returned only if it contains all of the paths.
+
+    db
+        The firestore database object to use
+
+    optional_paths
+        A list of optional paths where the response value should be returned if available, but is not required for a response to be returned at all.
+    """
     responses_ref = db.collection("responses")
     response_docs = responses_ref.stream()
     responses = []
