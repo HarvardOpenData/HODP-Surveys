@@ -92,3 +92,12 @@ python3 add_responses.py mapping_file.json data_file.csv
 ```
 Once the command is run, it will generate two files. The first is `respondents_backup.json`, which is a simple json backup of the original respondents backup file. The second is `updates.json`, this is a list of the updates that will be sent up. The `updates.json` file should be validated manually to make sure everything looks right. Then after typing `confirm` the updates will be pushed. 
 
+## Retrieving data
+The process for retrieving data is relatively simple, but there is no command line utility for doing so, so must be done from either a juptyer notebook or another python file. In this new file, import the `src/get_responses.py` file. Then the `get_response_values` function should be called. 
+
+The function takes two different categories of paths. The first is the required paths. These indicate that a given respondent's values should only be returned if the respondent has values for _all_ of the paths. Then there is an optional parameter, `optional_paths` that defines paths whose values should be returned as long as they exist, even if the user doesn't have all of them. The reason for the distinction is to limit how much data is accessible. If someone makes a data request, they should not be able to get an arbitrarily large dataset. They should only receive the bare minimum data to perform their analysis. For this reason, we should be very careful about providing `optional_paths` because this risks returning too much data. 
+
+Further documentation about data retrieval is found in the `get_responses.py` file itself.
+
+## Getting emails
+To retrieve the emails for sending out to the survey group, use the `get_respondent_emails.py` file. Running from the command line will create csv with the list of emails, as well as their class years. The class yeras is simply to make it easier to filter who the emails should be sent to. 
