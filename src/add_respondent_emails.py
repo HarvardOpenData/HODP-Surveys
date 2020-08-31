@@ -4,13 +4,10 @@ import firebase_admin
 from firebase_admin import credentials
 from firebase_admin import firestore
 import datetime
-from utils.linking import hash_email
-from utils import firebasedb
-
 
 def new_user():
     return {
-        u"has_demographics" : True,
+        u"has_demographics" : False,
         u"monthly_responses" : {},
         u"total_responses" : 0,
         u"date_created" : datetime.datetime.now(),
@@ -48,10 +45,6 @@ def main():
         email_doc = email_ref.get()
         if not email_doc.exists:
             email_ref.set(new_user())
-        else:
-            email_ref.update({
-                u"has_demographics" : True
-            })
 
         update_dict = {
             u"demographics" : {
@@ -68,8 +61,6 @@ def main():
         response_doc = response_ref.get()
         if not repsonse_doc.exists:
             response_ref.set(update_dict)
-        else:
-            response_ref.update(update_dict)
         print("Added ", email)
 
     
