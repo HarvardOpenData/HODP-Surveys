@@ -41,9 +41,9 @@ def main():
     emails_ref = db.collection(u"emails")
     responses_ref = db.collection(u"responses")
     for respondent in respondents:
-        if "email" not in respondent:
+        if "email" not in respondent and "@college.harvard.edu" in respondent["email"].strip():
             continue
-        email = respondent["email"]
+        email = respondent["email"].strip().lower()
         email_hash = hash_email(email) 
         email_ref = emails_ref.document(email)
         email_doc = email_ref.get()

@@ -37,30 +37,14 @@ def main():
     emails_ref = db.collection(u"emails")
     responses_ref = db.collection(u"responses")
     for respondent in respondents:
-        if "email" not in respondent:
+        if "email" not in respondent and "@college.harvard.edu" in respondent["email"].strip():
             continue
-        email = respondent["email"]
+        email = respondent["email"].strip().lower()
         email_hash = hash_email(email) 
         email_ref = emails_ref.document(email)
         email_doc = email_ref.get()
         if not email_doc.exists:
             email_ref.set(new_user())
-
-        update_dict = {
-            u"demographics" : {
-                u"gender" : get_or_none(respondent, "gender"),
-                u"year" : get_or_none(respondent, "year"),
-                u"freshman_dorm" : get_or_none(respondent, "freshman_dorm"),
-                u"house" : get_or_none(respondent, "house"),
-                u"concentration" : [x.strip() for x in get_or_none(respondent, "concentration").split(",")],
-                u"ethnicity" : [x.strip() for x in get_or_none(respondent, "ethnicity").split(",")]
-            }
-        }
-
-        response_ref = responses_ref.document(email_hash)
-        response_doc = response_ref.get()
-        if not repsonse_doc.exists:
-            response_ref.set(update_dict)
         print("Added ", email)
 
     
