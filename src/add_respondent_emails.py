@@ -16,7 +16,7 @@ def new_user():
 
 def get_or_none(d, k):
     if k in d and len(d[k].strip()) > 0:
-        return k[d].strip()
+        return d[k].strip()
     else: 
         return None
 

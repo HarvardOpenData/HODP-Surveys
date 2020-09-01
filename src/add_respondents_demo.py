@@ -20,7 +20,7 @@ def new_user():
 
 def get_or_none(d, k):
     if k in d and len(d[k].strip()) > 0:
-        return k[d].strip()
+        return d[k].strip()
     else: 
         return None
 
@@ -52,22 +52,23 @@ def main():
         else:
             email_ref.update({
                 u"has_demographics" : True
-            })
-
+            })  
+        concentration = get_or_none(respondent, "concentration")
+        ethnicity = get_or_none(respondent, "ethnicity")
         update_dict = {
             u"demographics" : {
                 u"gender" : get_or_none(respondent, "gender"),
                 u"year" : get_or_none(respondent, "year"),
                 u"freshman_dorm" : get_or_none(respondent, "freshman_dorm"),
                 u"house" : get_or_none(respondent, "house"),
-                u"concentration" : [x.strip() for x in get_or_none(respondent, "concentration").split(",")],
-                u"ethnicity" : [x.strip() for x in get_or_none(respondent, "ethnicity").split(",")]
+                u"concentration" : [x.strip() for x in concentration.split()] if concentration is not None else None,
+                u"ethnicity" : [x.strip() for x in ethnicity.split(",")] if ethnicity is not None else None
             }
         }
 
         response_ref = responses_ref.document(email_hash)
         response_doc = response_ref.get()
-        if not repsonse_doc.exists:
+        if not response_doc.exists:
             response_ref.set(update_dict)
         else:
             response_ref.update(update_dict)
